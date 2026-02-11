@@ -1,0 +1,75 @@
+services:
+  # --- BOT 1 ---
+  bot1-gateway:
+    image: ${OPENCLAW_IMAGE}
+    build:
+      context: .
+      dockerfile: ./Dockerfile.local
+    container_name: bot1-gateway
+    restart: unless-stopped
+    user: "1001:1001"
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_GATEWAY_TOKEN: ${BOT1_TOKEN}
+      GOG_KEYRING_PASSWORD: ${BOT1_KEYRING_PASS}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      BRAVE_API_KEY: ${BRAVE_SEARCH_API_KEY}
+      TRANBI_EMAIL: ${TRANBI_EMAIL}
+      TRANBI_PASSWORD: ${TRANBI_PASSWORD}
+    volumes:
+      - /mnt/openclaw-data/bot1/config:/home/node/.openclaw
+      - /mnt/openclaw-data/bot1/workspace:/home/node/.openclaw/workspace
+      - /opt/openclaw/ssh-keys/bot1:/home/node/.ssh:ro
+    ports:
+      - "127.0.0.1:18789:18789"
+    init: true
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
+
+  bot1-cli:
+    image: ${OPENCLAW_IMAGE}
+    container_name: bot1-cli
+    environment:
+      HOME: /home/node
+      OPENCLAW_GATEWAY_TOKEN: ${BOT1_TOKEN}
+    volumes:
+      - /mnt/openclaw-data/bot1/config:/home/node/.openclaw
+      - /mnt/openclaw-data/bot1/workspace:/home/node/.openclaw/workspace
+    stdin_open: true
+    tty: true
+    entrypoint: ["node", "dist/index.js"]
+
+  # --- BOT 2 ---
+  bot2-gateway:
+    image: ${OPENCLAW_IMAGE}
+    build:
+      context: .
+      dockerfile: ./Dockerfile.local
+    container_name: bot2-gateway
+    restart: unless-stopped
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      OPENCLAW_GATEWAY_TOKEN: ${BOT2_TOKEN}
+      GOG_KEYRING_PASSWORD: ${BOT2_KEYRING_PASS}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    volumes:
+      - /mnt/openclaw-data/bot2/config:/home/node/.openclaw
+      - /mnt/openclaw-data/bot2/workspace:/home/node/.openclaw/workspace
+    ports:
+      - "127.0.0.1:18790:18789"
+    init: true
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--port", "18789"]
+
+  bot2-cli:
+    image: ${OPENCLAW_IMAGE}
+    container_name: bot2-cli
+    environment:
+      HOME: /home/node
+      OPENCLAW_GATEWAY_TOKEN: ${BOT2_TOKEN}
+    volumes:
+      - /mnt/openclaw-data/bot2/config:/home/node/.openclaw
+      - /mnt/openclaw-data/bot2/workspace:/home/node/.openclaw/workspace
+    stdin_open: true
+    tty: true
+    entrypoint: ["node", "dist/index.js"]
