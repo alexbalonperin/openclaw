@@ -17,10 +17,12 @@ services:
       BRAVE_API_KEY: ${BRAVE_SEARCH_API_KEY}
       TRANBI_EMAIL: ${TRANBI_EMAIL}
       TRANBI_PASSWORD: ${TRANBI_PASSWORD}
+      GOG_ACCOUNT: ${BOT1_GOG_ACCOUNT}
     volumes:
       - /mnt/openclaw-data/bot1/config:/home/node/.openclaw
       - /mnt/openclaw-data/bot1/workspace:/home/node/.openclaw/workspace
       - /opt/openclaw/ssh-keys/bot1:/home/node/.ssh:ro
+      - /home/stewie/.config/gogcli:/home/node/.config/gog:ro
     ports:
       - "127.0.0.1:18789:18789"
     init: true
