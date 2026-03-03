@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.local
+      args:
+        OPENCLAW_INSTALL_BROWSER: "1"
     container_name: bot1-gateway
     restart: unless-stopped
     user: "1001:1001"
@@ -47,6 +49,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.local
+      args:
+        OPENCLAW_INSTALL_BROWSER: "1"
     container_name: bot2-gateway
     restart: unless-stopped
     environment:
@@ -82,8 +86,11 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile.local
+      args:
+        OPENCLAW_INSTALL_BROWSER: "1"
     container_name: haven-coporate-website-bot-gateway
     restart: unless-stopped
+    user: "1001:1001"
     environment:
       HOME: /home/node
       TERM: xterm-256color
@@ -91,9 +98,11 @@ services:
       GITHUB_PAT: ${BOT3_GITHUB_TOKEN}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       BRAVE_API_KEY: ${BRAVE_SEARCH_API_KEY}
+      VERCEL_TOKEN: ${VERCEL_TOKEN}
     volumes:
       - /mnt/openclaw-data/bot3/config:/home/node/.openclaw
       - /mnt/openclaw-data/bot3/workspace:/home/node/.openclaw/workspace
+      - /mnt/openclaw-data/bot3/gnupg:/home/node/.gnupg:ro
     ports:
       - "127.0.0.1:18791:18789"
     init: true
